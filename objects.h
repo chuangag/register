@@ -39,6 +39,7 @@ bool is_number(const string& s)
 
 
 //-------------------class Student
+
 class Student
 {
 public:
@@ -107,6 +108,8 @@ public:
         }
         return false;
     }
+    
+    
     //print functions
     
     
@@ -257,6 +260,17 @@ private:
     string HashKey;//CourseCode
     bool canPrint;
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 

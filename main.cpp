@@ -15,6 +15,8 @@ using namespace std;
 int main(int argc, const char * argv[]) {
     HashTable<Student> studentTable(29,10);
     HashTable<Course> courseTable(17,36);
+    HashTable<CourseRecord*> pstudentTable(29,10);
+    HashTable<CourseRecord*> pcourseTable(17,36);
     DoublySortedLinkedList<CourseRecord> courseSelection;
     
     
@@ -96,24 +98,24 @@ int main(int argc, const char * argv[]) {
     
     cout<<"------------Course Registration------------"<<endl<<endl<<endl;
     
-    CourseRecord cr1;
+    CourseRecord cr1;CourseRecord* pcr1=&cr1;
     cr1.setStudentID("12345678",studentTable);
     cr1.setCourseCode("COMP2333", courseTable);
     
-    CourseRecord cr2;
+    CourseRecord cr2;CourseRecord* pcr2=&cr2;
     cr2.setStudentID("12345677",studentTable);
     cr2.setCourseCode("COMP2333", courseTable);
     
-    CourseRecord cr3;
+    CourseRecord cr3;CourseRecord* pcr3=&cr3;
     cr3.setStudentID("12345677",studentTable);
     cr3.setCourseCode("COMP2334", courseTable);
     
-    courseSelection.insertItem(cr1);
-    courseSelection.insertItem(cr3);
+    courseSelection.insertItem(cr1);pstudentTable.addItembyStuIDHash(pcr1);pcourseTable.addItembyCCodeHash(pcr1);
+    courseSelection.insertItem(cr3);pstudentTable.addItembyStuIDHash(pcr3);pcourseTable.addItembyCCodeHash(pcr3);
     /*courseSelection.queryAndPrintItem(cr1);
     courseSelection.queryAndPrintItem(cr2);
     courseSelection.insertItem(cr1);*/
-    courseSelection.insertItem(cr2);
+    courseSelection.insertItem(cr2);pstudentTable.addItembyStuIDHash(pcr2);pcourseTable.addItembyCCodeHash(pcr2);
     /*
     courseSelection.queryAndPrintItem(cr2);
     courseSelection.queryAndPrintItem(cr3);*/
@@ -135,6 +137,9 @@ int main(int argc, const char * argv[]) {
         
         courseSelection.traverseAll().at(i).print_Query();
     }
+    courseTable.removeItem(c1);courseSelection.delete_all_courses(c1);pcourseTable.remove_all_Pointer_by_course(c1);pstudentTable.remove_all_Pointer_by_course(c1);//I don't know how to deal with the wild pointer left
+
+    
     return 0;
     
 }
