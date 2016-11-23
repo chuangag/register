@@ -1,7 +1,7 @@
 #ifndef _HASHTABLE_H
 #define _HASHTABLE_H
 #include <vector>
-#include "doublySortedLinkedList.cpp"//.h
+#include "doublySortedLinkedList.h"//.h
 #include <string>
 #include "math.h"
 using namespace std;
@@ -24,7 +24,7 @@ int valueOf(char c){
 }
 
 template <class T>
-class HashTable {
+class HashTable{
 private:
     vector<DoublySortedLinkedList<T> > table;
     int numBuckets;
@@ -44,12 +44,19 @@ public:
         /*hash function
          *Sum_i{key[i]*(base^i)}%numBuckets
          */
+        
+        //big number mod???????????????????????????
+        
+        
+        
         int basePow=1;
         for(int i=0;i<len;i++){
-            sum+=valueOf(key[i])*basePow;
+            sum+=(valueOf(key[i])*basePow)%numBuckets;//avoid too large then overflow
             basePow*=base;
         }
+        //cout<<"sum: "<<sum<<endl;
         index=sum%numBuckets;
+        //cout<<"index: "<<index<<endl;
         return index;
     }
     
@@ -64,7 +71,7 @@ public:
             Item.print_exist();
         }
         else{
-            table.at(index).insetInList(Item);
+            table.at(index).insertItem(Item);
         }
     }
     void removeItem(T Item){
@@ -72,9 +79,14 @@ public:
          get hashed index = index
          this is include in erasefunction（checkInList in table.at(index), which is a DoublySortedLinkedList
          table.at(index).eraseItem(Item)
+         
+         and also when remove a course or Student, remove the CourseRecord in the CourseSelection table if exist
          */
+        
         int index=hashedIndex(Item);
         table.at(index).eraseItem(Item);
+        
+        
     }
     void queryItem(T Item){
         /*
@@ -85,6 +97,31 @@ public:
         table.at(index).queryItem(Item).print_Query();
     }
     
+    bool checkInTable(T Item){
+        /*
+         get hashed index = index
+         table.at(index).checkInList(Item);
+         */
+        int index=hashedIndex(Item);
+        return table.at(index).checkInList(Item);
+    }
+    
+    /*TODO:
+     output all function for html and file IO
+        traverse all buckets, if table.at(i).size()==0, skip
+        or traverse the list using table.at(i).traverseAll()
+     */
+    vector<T> traverseAllInHashTable(){
+        vector<T> result;
+        result.resize(0);
+        for(int i=0;i<numBuckets;i++){
+            vector<T> tmp=table.at(i).traverseAll();
+            result.reserve(result.size()+tmp.size());
+            result.insert(result.end(), tmp.begin(), tmp.end());
+        }
+        sort(result.begin(),result.end());
+        return result;
+    }
     
 };
 

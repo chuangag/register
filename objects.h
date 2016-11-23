@@ -3,18 +3,20 @@
 #include <string>
 #include <iostream>
 #include <cctype>
+
 using namespace std;
 const int LENOFSTUID=8;
 
 /*TODO:
- overload ==, <
+ overload ==, < ok
  
+ okv
  void print_not_exist
  void print_insert_success
  void print_delete_success
  void print_modify_success
  void print_Query(datatype)
- 
+ ok^
  
  remember delete function should both delete the type table and the course selection linked list
  
@@ -23,28 +25,39 @@ const int LENOFSTUID=8;
  *****set functions should include checking valid input
  */
 
-/*check if a string is number*/
-bool is_number(const string& s)//????????is a float number?????????? minor bug tentative
-{
-    return !s.empty() && find_if(s.begin(),s.end(), [](char c) { return !isdigit(c); }) == s.end();
+/*check if a string is int number*/
+bool is_number(const string& s)
+{   if(s.empty())
+        return false;
+    for(int i=0;i<s.length();i++){
+        if(s[i]>57||s[i]<48){
+            return false;
+        }
+    }
+    return true;
 }
 
 
-//class Student
+//-------------------class Student
 class Student
 {
 public:
-    Student(string StuID){
-        StudentID="";
+    Student(string StuID=""){
+        StudentID=StuID;
+        canPrint=true;
+        Year=0;
     }
-    ~Student();
+    ~Student(){}
     //get functions
-    string getStudentID(){return StudentID;}
-    string getStudentName(){return StudentName;}
-    int getYear(){return Year;}
-    char getGender(){return Gender;}
-    string getHashKey(){return HashKey;}
+    string getStudentID() const{return StudentID;}
+    string getStudentName() const{return StudentName;}
+    int getYear() const{return Year;}
+    char getGender()const{return Gender;}
+    string getHashKey()const{return HashKey;}
     //set functions(include checking)
+    void setcanPrintToFalse(){
+        canPrint=false;
+    }
     void setStudentID(string StuID){
         while(StuID.length()!=8||!is_number(StuID)){
             cout<<"Invalid input, re-enter again [student ID]: ";
@@ -54,7 +67,7 @@ public:
         HashKey=StudentID;
     }
     
-    void setStudentNae(string StuName){
+    void setStudentName(string StuName){
         while(StuName.length()>32||StuName.length()<1){
             cout<<"Invalid input, re-enter again [student name]: ";
             cin>>StuName;
@@ -78,7 +91,7 @@ public:
         Gender=g[0];
     }
     //overload operators
-    bool operator==(Student& stu){//compare by studentID
+    bool operator==(const Student& stu) const{//compare by studentID
         if(this->getStudentID()==stu.getStudentID()){
             return true;
         }
@@ -86,7 +99,7 @@ public:
             return false;
         }
     }
-    bool operator<(Student& stu){//compare by studentID
+    bool operator<(const Student& stu) const{//compare by studentID
         for(int i=0;i<LENOFSTUID;i++){
             if(this->getStudentID()[i]<stu.getStudentID()[i]){
                 return true;
@@ -95,6 +108,8 @@ public:
         return false;
     }
     //print functions
+    
+    
     void print_not_exist(){
         cout<<"Student not exist"<<endl;
     }
@@ -116,6 +131,7 @@ public:
     }
     
     void print_Query(){
+        if(!canPrint||Year==0){return;}
         cout<<"ID:     "<<StudentID<<endl;
         cout<<"Name:   "<<StudentName<<endl;
         cout<<"Year:   "<<Year<<endl;
@@ -132,6 +148,7 @@ private:
     int Year;//{1,2,3}
     char Gender;//M or F
     string HashKey;//StudentID
+    bool canPrint;
 };
 
 
@@ -143,16 +160,21 @@ private:
 class Course
 {
 public:
-    Course(string CCode){
-        CourseCode="";
+    Course(string CCode=""){
+        CourseCode=CCode;
+        canPrint=true;
+        Credit=-1;
     }
-    ~Course();
+    ~Course(){}
     //get functions
-    string getCourseCode(){return CourseCode;}
-    string getCourseName(){return CourseName;}
-    int getCredit(){return Credit;}
-    string getHashKey(){return HashKey;}
+    string getCourseCode() const{return CourseCode;}
+    string getCourseName() const{return CourseName;}
+    int getCredit() const{return Credit;}
+    string getHashKey() const{return HashKey;}
     //set functions
+    void setcanPrintToFalse(){
+        canPrint=false;
+    }
     void setCourseCode(string CCode){
         while((CCode.length()!=8&&CCode.length()!=7)||(!isupper(CCode[0])||!isupper(CCode[1])||!isupper(CCode[2])||!isupper(CCode[3]))){
             if(CCode.length()==8&&isupper(CCode[0])&&isupper(CCode[1])&&isupper(CCode[2])&&isupper(CCode[3])&&is_number(CCode.substr(4,7))){
@@ -182,6 +204,23 @@ public:
         }
         Credit=stoi(credit);
     }
+    //overload operators
+    bool operator==(const Course& cour) const{//compare by studentID
+        if(this->getCourseCode()==cour.getCourseCode()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    bool operator<(const Course& cour) const{//compare by studentID
+        for(int i=0;i<LENOFSTUID;i++){
+            if(this->getCourseCode()[i]<cour.getCourseCode()[i]){
+                return true;
+            }
+        }
+        return false;
+    }
     
     //print functions
     void print_not_exist(){
@@ -205,6 +244,7 @@ public:
     }
     
     void print_Query(){
+        if(!canPrint||Credit==-1){return;}
         cout<<"Code:   "<<CourseCode<<endl;
         cout<<"Name:   "<<CourseName<<endl;
         cout<<"Credit: "<<Credit<<endl;
@@ -215,31 +255,62 @@ private:
     string CourseName;//1<=len<=50
     int Credit;//{0,1,2,3,4,5}
     string HashKey;//CourseCode
+    bool canPrint;
 };
 
-//class CourseRecord
+
+
+
+//--------------------------class CourseRecord
+/*
 class CourseRecord
 {
 public:
-    CourseRecord(string StuID,string CCode){
-        StudentID="";
-        CourseCode="";
+    CourseRecord(string StuID="",string CCode=""){
+        StudentID=StuID;
+        CourseCode=StuID;
+        canPrint=true;
+        ExamMark=-1;//N/A
     }
-    ~CourseRecord();
+    ~CourseRecord(){}
     //get functions
-    string getStudentID(){return StudentID;}
-    string getCourseCode(){return CourseCode;}
-    int getExamMark(){return ExamMark;}
+    string getStudentID() const{return StudentID;}
+    string getCourseCode() const{return CourseCode;}
+    int getExamMark() const{return ExamMark;}
     //set functions
-    void setStudentID(string StuID){
+    void setcanPrintToFalse(){
+        canPrint=false;
+    }
+    
+    void setStudentID(string StuID){//no checking exist in table version, only use when sure about no except(internal use)
+        StudentID=StuID;
+    }
+    void setStudentID(string StuID, HashTable<Student> stuTable){
+        
+        //check valid first and check if the student exist in the student table
+        
         while(StuID.length()!=8||!is_number(StuID)){
             cout<<"Invalid input, re-enter again [student ID]: ";
             cin>>StuID;
         }
-        StudentID=StuID;
+        
+        Student virtualStuForChecking;
+        virtualStuForChecking.setStudentID(StuID);
+        if(stuTable.checkInTable(virtualStuForChecking)){
+            StudentID=StuID;
+        }
+        else{
+            virtualStuForChecking.print_not_exist();
+            return;
+        }
     }
-
-    void setCourseCode(string CCode){
+    
+    
+    void setCourseCode(string CCode){//no checking exist in table version, only use when sure about no except(internal use)
+        CourseCode=CCode;
+    }
+    void setCourseCode(string CCode,HashTable<Course> courTable){
+        //check valid first and check exist
         while((CCode.length()!=8&&CCode.length()!=7)||(!isupper(CCode[0])||!isupper(CCode[1])||!isupper(CCode[2])||!isupper(CCode[3]))){
             if(CCode.length()==8&&isupper(CCode[0])&&isupper(CCode[1])&&isupper(CCode[2])&&isupper(CCode[3])&&is_number(CCode.substr(4,7))){
                 break;
@@ -251,7 +322,16 @@ public:
             cout<<"Invalid input, re-enter again [course code]: ";
             cin>>CCode;
         }
-        CourseCode=CCode;
+        
+        Course virtualCourseForChecking;
+        virtualCourseForChecking.setCourseCode(CCode);
+        if(courTable.checkInTable(virtualCourseForChecking)){
+            CourseCode=CCode;
+        }
+        else{
+            virtualCourseForChecking.print_not_exist();
+            return;
+        }
     }
     
     void setExamMark(string mark){
@@ -259,27 +339,84 @@ public:
             cout<<"Invalid input, re-enter again [student year]: ";
             cin>>mark;
         }
+        print_modify_success();
         ExamMark=stoi(mark);
     }
+    //check include course or student
+    bool include(CourseRecord creccmp){
+        if(this->getStudentID()==creccmp.getStudentID()||this->getCourseCode()==creccmp.getCourseCode()){
+            return true;
+        }
+        else
+            return false;
+    }
     //print functions
-    void print_already_register(){
+    void print_exist(){
         cout<<"The student already registered the course"<<endl;
     }
-    void print_add_success(){
+    void print_insert_success(){
         cout<<"Add course successful"<<endl;
     }
-    void print_drop_success(){
+    void print_delete_success(){
         cout<<"Drop course successful"<<endl;
+    }
+    void print_not_exist(){
+        cout<<"The registration record not exist"<<endl;
     }
     void print_modify_success(){
         cout<<"Modifucation of exam mark successful"<<endl;
     }
+    void print_Query(){
+        if(!canPrint){return;}
+        cout<<"Student ID:  "<<StudentID<<endl;
+        cout<<"Course Code: "<<CourseCode<<endl;
+        
+        if(ExamMark!=-1)
+            cout<<"Exam Mark:   "<<ExamMark<<endl;
+        else if(ExamMark==-1)
+            cout<<"Exam Mark:   "<<"N/A"<<endl;
+    }
+
+    //overload operators
+    //primary sorting key: StudentID
+     //secondary sorting key: CourseCode
+ 
     
+    bool operator==(const CourseRecord& crec) const{//compare by studentID
+        if(this->getCourseCode()==crec.getCourseCode()&&this->getStudentID()==crec.getStudentID()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    bool operator<(const CourseRecord& crec) const{//compare by studentID, if the same, compare by coursecode
+        for(int i=0;i<LENOFSTUID;i++){
+            if(this->getStudentID()[i]<crec.getStudentID()[i]){
+                return true;
+            }
+        }
+        for(int i=0;i<LENOFSTUID;i++){
+            if(this->getCourseCode()[i]<crec.getCourseCode()[i]){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    // overload = :equal this to a student or course by setting the coresponding key
+    CourseRecord operator=(Student stu){
+        setStudentID(stu.getStudentID());
+    }
+    CourseRecord operator=(Course cour){
+        setCourseCode(cour.getCourseCode());
+    }
     
 private:
     string StudentID;//length=8
     string CourseCode;//len=7 or 8,first four are upper letters
     int ExamMark;//0<=mark<=100 or unassigned
-};
+    bool canPrint;
+};*/
 
 #endif
