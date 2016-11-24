@@ -62,7 +62,7 @@ public:
     void setStudentID(string StuID){
         while(StuID.length()!=8||!is_number(StuID)){
             cout<<"Invalid input, re-enter again [student ID]: ";
-            cin>>StuID;
+            getline(cin,StuID);
         }
         StudentID=StuID;
         HashKey=StudentID;
@@ -71,7 +71,7 @@ public:
     void setStudentName(string StuName){
         while(StuName.length()>32||StuName.length()<1){
             cout<<"Invalid input, re-enter again [student name]: ";
-            cin>>StuName;
+            getline(cin,StuName);
         }
         StudentName=StuName;
     }
@@ -79,7 +79,7 @@ public:
     void setYear(string y){
         while(!is_number(y)||(stoi(y)>3||stoi(y)<1)){
             cout<<"Invalid input, re-enter again [student year]: ";
-            cin>>y;
+            getline(cin,y);
         }
         Year=stoi(y);
     }
@@ -87,7 +87,7 @@ public:
     void setGender(string g){
         while(g!="M"&&g!="F"){
             cout<<"Invalid input, re-enter again [M,F]: ";
-            cin>>g;
+            getline(cin,g);
         }
         Gender=g[0];
     }
@@ -188,7 +188,7 @@ public:
             }
 
             cout<<"Invalid input, re-enter again [course code]: ";
-            cin>>CCode;
+            getline(cin,CCode);
         }
         CourseCode=CCode;
         HashKey=CourseCode;
@@ -196,14 +196,14 @@ public:
     void setCourseName(string CName){
         while(CName.length()>50||CName.length()<1){
             cout<<"Invalid input, re-enter again [course name]: ";
-            cin>>CName;
+            getline(cin,CName);
         }
         CourseName=CName;
     }
     void setCredit(string credit){
         while(credit!="0"&&credit!="1"&&credit!="2"&&credit!="3"&&credit!="4"&&credit!="5"){
             cout<<"Invalid input, re-enter again [course credit]: ";
-            cin>>credit;
+            getline(cin,credit);
         }
         Credit=stoi(credit);
     }

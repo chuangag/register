@@ -16,6 +16,7 @@ public:
     void sortList();
     //operation with an Item
     bool checkInList(T item);
+    bool checkCourseExist(Course c);
     void eraseItem(T item);
     T& queryItem(T item);
     void queryAndPrintItem(T item);
@@ -50,6 +51,19 @@ bool DoublySortedLinkedList<T>::checkInList(T item){
     typename list<T>::iterator i;
     for(i=doublySortedLinkedList.begin();i!=doublySortedLinkedList.end();++i){
         if(*i==item){
+            return true;
+        }
+    }
+    return false;
+}
+
+template <class T>
+bool DoublySortedLinkedList<T>::checkCourseExist(Course c){
+    /*traverse the list and check if CourseRecord include c already exist,
+     compare using Course Code*/
+    typename list<T>::iterator i;
+    for(i=doublySortedLinkedList.begin();i!=doublySortedLinkedList.end();++i){
+        if(i->getCourseCode()==c.getCourseCode()){
             return true;
         }
     }

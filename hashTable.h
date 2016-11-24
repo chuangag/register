@@ -34,6 +34,10 @@ public:
         table.resize(n);
     }
     ~HashTable(){}
+    
+    //get table
+    vector<DoublySortedLinkedList<T> > getTable(){return table;}
+    
     //return the index after hashing
     int hashedIndex(T Item){//HashKey is a string, and initialize when Item constructed
         string key;
@@ -188,6 +192,28 @@ public:
     }
     
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //template-specialization for pointer
 template <class T>
