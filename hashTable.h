@@ -165,6 +165,15 @@ public:
         table.at(index).queryItem(Item).print_Query();
     }
     
+    T& getItem(T Item){
+        /*
+         get hashed index = index
+         table.at(index).queryItem(Item)
+         */
+        int index=hashedIndex(Item);
+        return table.at(index).queryItem(Item);
+    }
+    
     bool checkInTable(T Item){
         /*
          get hashed index = index

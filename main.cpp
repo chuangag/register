@@ -12,7 +12,11 @@
 #include "objects.h"
 #include "courseRecord.h"
 using namespace std;
-/*TODO: might need to implement insert fuction pack since I don't think the pointer table is inserted yet, but I am too tired to check now, 11/24*/
+/*TODO: might need to implement insert fuction pack since I don't think the pointer table is inserted yet, but I am too tired to check now, 11/24
+ 
+ BUGS: when inserting course record, first time input wrong coursecorde , then invalid message will print twice, check the while loop and maybe the sequence of cout!!!!!!!!
+ 
+ */
 
 
 
@@ -20,17 +24,19 @@ using namespace std;
 
 //simplify delete fuctions into one line
 
-void deleteCourse(Course c,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable);
-void deleteStudent(Student s,HashTable<Student> studentTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable);
+void deleteCourse(Course &c,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
+void deleteStudent(Student &s,HashTable<Student> &studentTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 
-//TODO: simplify insert functions of CourseSelection (also need to add to the Pointer table)
+//simplify insert functions of CourseSelection (also need to add to the Pointer table)
+void addCourseSelection(CourseRecord &cr,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 
 //menu functions
-void main_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable);
-void student_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable);
-void course_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable);
-void course_selection_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable);
+void main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
+void student_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
+void course_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
+void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 
+void return_main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 
 
 
@@ -196,7 +202,7 @@ int main(int argc, const char * argv[]) {
 //function definition
 
 //fuctions wrapping for simplier main
-void deleteCourse(Course c,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable){
+void deleteCourse(Course &c,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     if(!courseSelection.checkCourseExist(c)){//check if any register record exist, if exist, deletion failed
         courseTable.removeItem(c);
         courseSelection.delete_all_courses(c);
@@ -208,7 +214,7 @@ void deleteCourse(Course c,HashTable<Course> courseTable,DoublySortedLinkedList<
     }
 }
 
-void deleteStudent(Student s,HashTable<Student> studentTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable){
+void deleteStudent(Student &s,HashTable<Student> &studentTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     studentTable.removeItem(s);
     courseSelection.delete_all_students(s);
     pcourseTable.remove_all_Pointer_by_student(s);
@@ -216,9 +222,23 @@ void deleteStudent(Student s,HashTable<Student> studentTable,DoublySortedLinkedL
     
 }
 
+void addCourseSelection(CourseRecord &cr,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
+    courseSelection.insertItem(cr);
+    CourseRecord* pcr = &cr;
+    pcourseTable.addItembyCCodeHash(pcr);
+    pstudentTable.addItembyStuIDHash(pcr);
+}
+
+void return_main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
+    cout<<endl<<"Hit ENTER to continue..."<<endl;
+    getchar();
+    main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+}
+
+
 
 //input of main menu should be 1-6 TODO:4,5 not available yet
-void main_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable){
+void main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     //clear the screen first
     system("clear");
     //print the menu
@@ -268,8 +288,7 @@ void main_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,Dou
     }
 }
 
-
-void student_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable){
+void student_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     //clear the screen first
     system("clear");
     //print the menu
@@ -303,9 +322,7 @@ void student_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,
             int index=studentTable.hashedIndex(stu);
             if(studentTable.getTable().at(index).checkInList(stu)){
                 stu.print_exist();
-                cout<<endl<<"Hit ENTER to continue..."<<endl;
-                getchar();
-                main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
                 break;
             }
             cout<<"Enter the student name: ";
@@ -321,20 +338,82 @@ void student_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,
             //insert the student
             studentTable.addItem(stu);
             
-            cout<<endl<<"Hit ENTER to continue..."<<endl;
-            getchar();
-            main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;
         }
         case 2:{//modify student
+            Student stu;
+            string StuID;
+            string StuName;
+            string StuYear;
+            string StuGender;
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            stu.setStudentID(StuID);
+            int index=studentTable.hashedIndex(stu);
+            //check exist
+            if(!studentTable.getTable().at(index).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            else{
+                cout<<"Enter the student name ["<<studentTable.getItem(stu).getStudentName()<<"]: ";
+                getline(cin,StuName);
+                studentTable.getItem(stu).setStudentName(StuName);
+                cout<<"Enter the student year ["<<studentTable.getItem(stu).getYear()<<"]: ";
+                getline(cin,StuYear);
+                studentTable.getItem(stu).setYear(StuYear);
+                cout<<"Enter the student gender ["<<studentTable.getItem(stu).getGender()<<"]: ";
+                getline(cin,StuGender);
+                studentTable.getItem(stu).setGender(StuGender);
+                studentTable.getItem(stu).print_modify_success();
+                
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            
             break;
         }
         case 3:{//delete student
-            
+            Student stu;
+            string StuID;
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            stu.setStudentID(StuID);
+            int index=studentTable.hashedIndex(stu);
+            //check exist
+            if(!studentTable.getTable().at(index).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            else{
+                deleteStudent(studentTable.getItem(stu), studentTable, courseSelection,pstudentTable, pcourseTable);
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+
             break;
         }
         case 4:{//query student
-            
+            Student stu;
+            string StuID;
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            stu.setStudentID(StuID);
+            int index=studentTable.hashedIndex(stu);
+            //check exist
+            if(!studentTable.getTable().at(index).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            else{
+                studentTable.queryItem(stu);
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
             break;
         }
         case 5:{//return to main menu
@@ -344,10 +423,9 @@ void student_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,
         default:
             break;
     }
-    
 }
 
-void course_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable){
+void course_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     //clear the screen first
     system("clear");
     //print the menu
@@ -380,9 +458,7 @@ void course_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,D
             int index=courseTable.hashedIndex(c);
             if(courseTable.getTable().at(index).checkInList(c)){
                 c.print_exist();
-                cout<<endl<<"Hit ENTER to continue..."<<endl;
-                getchar();
-                main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
                 break;
             }
             cout<<"Enter the course name: ";
@@ -395,21 +471,78 @@ void course_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,D
             //insert the course
             courseTable.addItem(c);
             
-            cout<<endl<<"Hit ENTER to continue..."<<endl;
-            getchar();
-            main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;
         }
-        case 2:
+        case 2:{//modify
+            Course c;
+            string CCode;
+            string CName;
+            string credit;
             
-            break;
-        case 3:
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            c.setCourseCode(CCode);
+            int index=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(index).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            else{
+                cout<<"Enter the course name ["<<courseTable.getItem(c).getCourseName()<<"]: ";
+                getline(cin,CName);
+                courseTable.getItem(c).setCourseName(CName);
+                cout<<"Enter the course credit ["<<courseTable.getItem(c).getCredit()<<"]: ";
+                getline(cin,credit);
+                courseTable.getItem(c).setCredit(credit);
+                courseTable.getItem(c).print_modify_success();
+                
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
             
+            }
             break;
-        case 4:
-            
+        }
+        case 3:{//delete
+            Course c;
+            string CCode;
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            c.setCourseCode(CCode);
+            int index=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(index).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            else{
+                deleteCourse(courseTable.getItem(c),courseTable, courseSelection,pstudentTable, pcourseTable);
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
             break;
-        case 5:{
+        }
+        case 4:{//query
+            Course c;
+            string CCode;
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            c.setCourseCode(CCode);
+            int index=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(index).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            else{
+                courseTable.queryItem(c);
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            break;
+        }
+        case 5:{//return to main menu
             main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;
         }
@@ -419,7 +552,7 @@ void course_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,D
     
 }
 
-void course_selection_menu(HashTable<Student> studentTable,HashTable<Course> courseTable,DoublySortedLinkedList<CourseRecord> courseSelection,HashTable<CourseRecord*> pstudentTable,HashTable<CourseRecord*> pcourseTable){
+void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     //clear the screen first
     system("clear");
     //print the menu
@@ -439,18 +572,160 @@ void course_selection_menu(HashTable<Student> studentTable,HashTable<Course> cou
     }
     int choice=stoi(schoice);
     switch (choice) {
-        case 1:{
+        case 1:{//add(register) course(add courseRecord)
+            CourseRecord cr;
+            string StuID;
+            string CCode;
+            
+            //check student exist and set student ID
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            Student stu;
+            stu.setStudentID(StuID);
+            int indexstu=studentTable.hashedIndex(stu);
+            if(!studentTable.getTable().at(indexstu).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setStudentID(StuID, studentTable);
+            
+            //check course exist and set Course Code
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            Course c;
+            c.setCourseCode(CCode);
+            int indexcou=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(indexcou).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setCourseCode(CCode, courseTable);
+            
+            addCourseSelection(cr, courseTable, courseSelection, pstudentTable, pcourseTable);
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;
         }
-        case 2:
+        case 2:{//drop course(delete courseRecord)
+            CourseRecord cr;
+            string StuID;
+            string CCode;
             
-            break;
-        case 3:
+            //check student exist and set student ID
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            Student stu;
+            stu.setStudentID(StuID);
+            int indexstu=studentTable.hashedIndex(stu);
+            if(!studentTable.getTable().at(indexstu).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setStudentID(StuID, studentTable);
             
-            break;
-        case 4:
+            //check course exist and set Course Code
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            Course c;
+            c.setCourseCode(CCode);
+            int indexcou=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(indexcou).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setCourseCode(CCode, courseTable);
             
+            courseSelection.eraseItem(cr);
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;
+        }
+        case 3:{//modify exam mark
+            CourseRecord cr;
+            string StuID;
+            string CCode;
+            string mark;
+            
+            //check student exist and set student ID
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            Student stu;
+            stu.setStudentID(StuID);
+            int indexstu=studentTable.hashedIndex(stu);
+            if(!studentTable.getTable().at(indexstu).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setStudentID(StuID, studentTable);
+            
+            //check course exist and set Course Code
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            Course c;
+            c.setCourseCode(CCode);
+            int indexcou=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(indexcou).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setCourseCode(CCode, courseTable);
+            
+            if(!courseSelection.checkInList(cr)){
+                cr.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            
+            if(courseSelection.queryItem(cr).getExamMark()==-1){
+                cout<<"Enter the exam mark [N/A]: ";
+            }
+            else{
+                cout<<"Enter the exam mark ["<<courseSelection.queryItem(cr).getExamMark()<<"]: ";
+            }
+            getline(cin,mark);
+            courseSelection.queryItem(cr).setExamMark(mark);
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
+        case 4:{//query(print) course Record
+            CourseRecord cr;
+            string StuID;
+            string CCode;
+            
+            //check student exist and set student ID
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            Student stu;
+            stu.setStudentID(StuID);
+            int indexstu=studentTable.hashedIndex(stu);
+            if(!studentTable.getTable().at(indexstu).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setStudentID(StuID, studentTable);
+            
+            //check course exist and set Course Code
+            cout<<"Enter the course code: ";
+            getline(cin,CCode);
+            Course c;
+            c.setCourseCode(CCode);
+            int indexcou=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(indexcou).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            cr.setCourseCode(CCode, courseTable);
+            
+            courseSelection.queryAndPrintItem(cr);
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
         case 5:{
             main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;

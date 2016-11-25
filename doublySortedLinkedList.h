@@ -102,7 +102,7 @@ T& DoublySortedLinkedList<T>::queryItem(T item){//CourseSelection need to be mod
     item.print_not_exist();
     T notPrint;
     notPrint.setcanPrintToFalse();
-    return notPrint;
+    return notPrint;//tentative bug: return local variable as reference
 }
 
 template <class T>
@@ -228,7 +228,7 @@ public:
         return false;
     }
 
-    void eraseItem(T* item){
+    void erasepItem(T* item){
         /*traverse the list and find item == T,
          if found, erase it,
          else T.print_not_exist*/
@@ -291,7 +291,7 @@ public:
         for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
             if((*i)->include(cour)){
                 //no need to print success delete from the courseSelection table according to the sample
-                eraseItem(*i);
+                erasepItem(*i);
             }
         }
     }
@@ -305,7 +305,7 @@ public:
         for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
             if((*i)->include(stu)){
                 //no need to print success delete from the courseSelection table according to the sample
-                eraseItem(*i);
+                erasepItem(*i);//TODO:debuging
             }
         }
     }
