@@ -75,7 +75,7 @@ public:
 
     void setExamMark(string mark){
         while(!is_number(mark)||(stoi(mark)>100||stoi(mark)<0)){
-            cout<<"Invalid input, re-enter again [student year]: ";
+            cout<<"Invalid input, re-enter again [exam mark]: ";
             cin>>mark;
         }
         print_modify_success();
@@ -114,7 +114,7 @@ public:
         cout<<"The registration record not exist"<<endl;
     }
     void print_modify_success(){
-        cout<<"Modifucation of exam mark successful"<<endl;
+        cout<<"Modification of exam mark successful"<<endl;
     }
     void print_Query(){
         if(!canPrint||StudentID==""){return;}

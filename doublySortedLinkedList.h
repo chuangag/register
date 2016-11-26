@@ -319,7 +319,35 @@ public:
         sort(result.begin(),result.end());
         return result;
     }
-    /*TODO:
+    
+    vector<T> traverseAllCourseOfStudent(Student stu){
+        vector<T> result;
+        result.resize(pdoublySortedLinkedList.size());
+        typename list<T*>::iterator i;
+        for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
+            T temp=**i;
+            if(temp.getStudentID()==stu.getStudentID()){
+                result.push_back(temp);
+            }
+        }
+        sort(result.begin(),result.end());
+        return result;
+    }
+    
+    vector<T> traverseAllStudentOfCourse(Course c){
+        vector<T> result;
+        result.resize(pdoublySortedLinkedList.size());
+        typename list<T*>::iterator i;
+        for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
+            T temp=**i;
+            if(temp.getCourseCode()==c.getCourseCode()){
+                result.push_back(temp);
+            }
+        }
+        sort(result.begin(),result.end());
+        return result;
+    }
+    /*
      void traverseAll()
      traverse all item in the list and print using item(i).print_Query();
      */

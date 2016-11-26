@@ -183,7 +183,7 @@ public:
         return table.at(index).checkInList(Item);
     }
     
-    /*TODO:
+    /*
      output all function for html and file IO
         traverse all buckets, if table.at(i).size()==0, skip
         or traverse the list using table.at(i).traverseAll()
@@ -236,7 +236,7 @@ public:
         table.resize(n);
     }
     ~HashTable(){}
-    
+    vector<DoublySortedLinkedList<T*> > getTable(){return table;}
 
     //return the index after hashing by Student ID
     int hashedIndexByStuID(T* Item){//HashKey is a string, and initialize when Item constructed
@@ -336,8 +336,7 @@ public:
         table.at(index).delete_all_courses(cour);
     }
     
-    /*TODO:
-     output all function for html and file IO
+    /*     output all function for html and file IO
      traverse all buckets, if table.at(i).size()==0, skip
      or traverse the list using table.at(i).traverseAll()
      */

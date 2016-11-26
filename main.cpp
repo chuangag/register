@@ -5,17 +5,18 @@
 //  Created by HUANG CHIA HUNG on 2016/11/20.
 //  Copyright © 2016年 HUANG CHIA HUNG. All rights reserved.
 //
-
+#include <fstream>
 #include <iostream>
 #include "hashTable.h"
 #include "doublySortedLinkedList.h"
 #include "objects.h"
 #include "courseRecord.h"
 using namespace std;
-/*TODO: might need to implement insert fuction pack since I don't think the pointer table is inserted yet, but I am too tired to check now, 11/24
+/*
+ BUGS:
+ 1. when inserting course record, first time input wrong coursecorde , then invalid message will print twice, check the while loop and maybe the sequence of cout!!!!!!!! fixed: double valid checking and not passed by reference
  
- BUGS: when inserting course record, first time input wrong coursecorde , then invalid message will print twice, check the while loop and maybe the sequence of cout!!!!!!!!
- 
+2. after deletion of student, the html will still print empty table(might need to fix the return virtual student and course problem, see the terminal)
  */
 
 
@@ -35,6 +36,7 @@ void main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,D
 void student_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 void course_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
+void course_report_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 
 void return_main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable);
 
@@ -53,150 +55,6 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-
-
-
-/* for testing only
-int main(int argc, const char * argv[]) {
-    
-    
-    HashTable<Student> studentTable(29,10);
-    HashTable<Course> courseTable(17,36);
-    HashTable<CourseRecord*> pstudentTable(29,10);
-    HashTable<CourseRecord*> pcourseTable(17,36);
-    DoublySortedLinkedList<CourseRecord> courseSelection;
-    
-    
-    cout<<"-------------Student------------"<<endl<<endl<<endl;
-    //test student
-    Student s1;
-    s1.setStudentID("12345678");
-    s1.setStudentName("Gao Tong");
-    s1.setYear("3");
-    s1.setGender("M");
-    
-    Student s2;
-    s2.setStudentID("12345677");
-    s2.setStudentName("Mei Zi");
-    s2.setYear("3");
-    s2.setGender("F");
-    
-    Student s3;
-    s3.setStudentID("12345676");
-    s3.setStudentName("HAHA");
-    s3.setYear("1");
-    s3.setGender("F");
-    
-    studentTable.addItem(s1);
-    studentTable.addItem(s2);
-    studentTable.addItem(s3);
-    
-    studentTable.queryItem(s1);
-    studentTable.removeItem(s3);
-    studentTable.removeItem(s1);
-    studentTable.removeItem(s1);
-    studentTable.queryItem(s1);
-    studentTable.queryItem(s2);
-    studentTable.queryItem(s3);
-    
-    for(int i=0;i<studentTable.traverseAllInHashTable().size();i++){
-        
-        studentTable.traverseAllInHashTable().at(i).print_Query();
-    }
-    
-    cout<<"-------------Course------------"<<endl<<endl<<endl;
-    
-    Course c1;
-    c1.setCourseCode("COMP2333");
-    c1.setCredit("4");
-    c1.setCourseName("Bad OOP");
-    
-    Course c2;
-    c2.setCourseCode("COMP2334");
-    c2.setCredit("3");
-    c2.setCourseName("Good OOP");
-    
-    Course c3;
-    c3.setCourseCode("COMP1324");
-    c3.setCredit("2");
-    c3.setCourseName("Shit OOP");
-    
-    Course c4;
-    c4.setCourseCode("COMP132");
-    c4.setCredit("2");
-    c4.setCourseName("Damn OOP");
-    
-    courseTable.addItem(c1);
-    //courseTable.queryItem(c2);
-    courseTable.addItem(c2);
-    //courseTable.addItem(c2);
-    //courseTable.queryItem(c2);
-    //courseTable.queryItem(c1);
-    //courseTable.removeItem(c2);
-    //courseTable.queryItem(c2);
-    courseTable.addItem(c3);
-    courseTable.addItem(c4);
-    //courseTable.removeItem(c3);
-    //courseTable.queryItem(c3);
-    for(int i=0;i<courseTable.traverseAllInHashTable().size();i++){
-        
-        courseTable.traverseAllInHashTable().at(i).print_Query();
-    }
-    
-    cout<<"------------Course Registration------------"<<endl<<endl<<endl;
-    
-    CourseRecord cr1;CourseRecord* pcr1=&cr1;
-    cr1.setStudentID("12345678",studentTable);
-    cr1.setCourseCode("COMP2333", courseTable);
-    
-    CourseRecord cr2;CourseRecord* pcr2=&cr2;
-    cr2.setStudentID("12345677",studentTable);
-    cr2.setCourseCode("COMP2333", courseTable);
-    
-    CourseRecord cr3;CourseRecord* pcr3=&cr3;
-    cr3.setStudentID("12345677",studentTable);
-    cr3.setCourseCode("COMP2334", courseTable);
-    
-    courseSelection.insertItem(cr1);pstudentTable.addItembyStuIDHash(pcr1);pcourseTable.addItembyCCodeHash(pcr1);
-    courseSelection.insertItem(cr3);pstudentTable.addItembyStuIDHash(pcr3);pcourseTable.addItembyCCodeHash(pcr3);
-    courseSelection.queryAndPrintItem(cr1);
-    courseSelection.queryAndPrintItem(cr2);
-    courseSelection.insertItem(cr1);
-    courseSelection.insertItem(cr2);pstudentTable.addItembyStuIDHash(pcr2);pcourseTable.addItembyCCodeHash(pcr2);
-    
-    courseSelection.queryAndPrintItem(cr2);
-    courseSelection.queryAndPrintItem(cr3);
-    courseSelection.setExamMarkFor(cr3,"24");
-    //courseSelection.queryAndPrintItem(cr3);
-    
-    
-    //!!!!!!!!notice that deletion of hashtable and the register record is seperated
-    courseTable.removeItem(c1);
-    courseSelection.delete_all_courses(c1);
-    
-    courseSelection.queryAndPrintItem(cr1);
-    courseSelection.queryAndPrintItem(cr3);
-    
-    courseTable.removeItem(c2);
-    
-    courseSelection.delete_all_courses(c2);
-    courseSelection.queryAndPrintItem(cr3);
-    
-    
-    
-    
-    for(int i=0;i<courseSelection.traverseAll().size();i++){
-        
-        courseSelection.traverseAll().at(i).print_Query();
-    }
-    courseSelection.eraseItem(cr2);
-    courseSelection.eraseItem(cr1);
-    deleteCourse(c1,courseTable,courseSelection,pstudentTable,pcourseTable);
-    
-    deleteStudent(s2, studentTable, courseSelection, pstudentTable, pcourseTable);
-    return 0;
-    
-}*/
 
 
 //function definition
@@ -236,8 +94,7 @@ void return_main_menu(HashTable<Student> &studentTable,HashTable<Course> &course
 }
 
 
-
-//input of main menu should be 1-6 TODO:4,5 not available yet
+//input of main menu should be 1-6 
 void main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     //clear the screen first
     system("clear");
@@ -272,7 +129,7 @@ void main_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,D
             break;
         }
         case 4:{
-            //TODO: html report
+            course_report_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
             break;
         }
         case 5:{
@@ -302,7 +159,7 @@ void student_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTabl
     cout<<"Enter your choice (1-5): ";
     string schoice;
     getline(cin,schoice);
-    while(!is_number(schoice)||stoi(schoice)>6||stoi(schoice)<1){
+    while(!is_number(schoice)||stoi(schoice)>5||stoi(schoice)<1){
         cout<<"Invalid input, re-enter again (1-5): ";
         getline(cin,schoice);
     }
@@ -439,7 +296,7 @@ void course_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable
     cout<<"Enter your choice (1-5): ";
     string schoice;
     getline(cin,schoice);
-    while(!is_number(schoice)||stoi(schoice)>6||stoi(schoice)<1){
+    while(!is_number(schoice)||stoi(schoice)>5||stoi(schoice)<1){
         cout<<"Invalid input, re-enter again (1-5): ";
         getline(cin,schoice);
     }
@@ -566,7 +423,7 @@ void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &c
     cout<<"Enter your choice (1-5): ";
     string schoice;
     getline(cin,schoice);
-    while(!is_number(schoice)||stoi(schoice)>6||stoi(schoice)<1){
+    while(!is_number(schoice)||stoi(schoice)>5||stoi(schoice)<1){
         cout<<"Invalid input, re-enter again (1-5): ";
         getline(cin,schoice);
     }
@@ -576,11 +433,13 @@ void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &c
             CourseRecord cr;
             string StuID;
             string CCode;
+            Student stu;
+            Course c;
             
             //check student exist and set student ID
             cout<<"Enter the student ID: ";
             getline(cin,StuID);
-            Student stu;
+            
             stu.setStudentID(StuID);
             int indexstu=studentTable.hashedIndex(stu);
             if(!studentTable.getTable().at(indexstu).checkInList(stu)){
@@ -593,7 +452,7 @@ void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &c
             //check course exist and set Course Code
             cout<<"Enter the course code: ";
             getline(cin,CCode);
-            Course c;
+            
             c.setCourseCode(CCode);
             int indexcou=courseTable.hashedIndex(c);
             if(!courseTable.getTable().at(indexcou).checkInList(c)){
@@ -736,7 +595,182 @@ void course_selection_menu(HashTable<Student> &studentTable,HashTable<Course> &c
     
 }
 
+void course_report_menu(HashTable<Student> &studentTable,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
+    //clear the screen first
+    system("clear");
+    //print the menu
+    cout<<"HKUST Course Registration System  (Report Generation Menu)"<<endl;
+    cout<<"----------------------------------------------------------"<<endl<<endl;
+    cout<<"1. List all student information"<<endl;
+    cout<<"2. List all course information"<<endl;
+    cout<<"3. List all courses of a student"<<endl;
+    cout<<"4. List all students of a course"<<endl;
+    cout<<"5. Go back to main menu"<<endl<<endl;
+    cout<<"Enter your choice (1-5): ";
+    string schoice;
+    getline(cin,schoice);
+    while(!is_number(schoice)||stoi(schoice)>5||stoi(schoice)<1){
+        cout<<"Invalid input, re-enter again (1-5): ";
+        getline(cin,schoice);
+    }
+    int choice=stoi(schoice);
+    switch (choice) {
+        case 1:{//list all student info
+            ofstream stuInfo ("Students.html",ios::out | ios::trunc);
+            if (stuInfo.is_open())
+            {
+                stuInfo<<"<html><head><head><title>All Students List</title></head><body bgColor=#ffffcc><h1><font color=#6600ff>HKUST Course Registration System</font></h1><h2>All Students List</h2><p><table cellSpacing=1 cellPadding=1 border=1>";
+                stuInfo<<"<tr><td>Student ID</td><td>Student Name</td><td>Year</td><td>Gender</td></tr>";
+                vector<Student>stuList=studentTable.traverseAllInHashTable();
+                for(int i=0;i<stuList.size();i++){
+                    if(stuList.at(i).getStudentID()!=""){
+                        stuInfo<<"<tr><td>"<<stuList.at(i).getStudentID()<<"</td><td>"<<stuList.at(i).getStudentName()<<"</td><td>"<<stuList.at(i).getYear()<<"</td><td>"<<stuList.at(i).getGender()<<"</td></tr>";
+                    }
+                }
+                
+                stuInfo<<"</table></p></body></html>";
+                stuInfo.close();
+                cout<<"Output Successful"<<endl;
+            }
+            else cout << "Unable to open file"<<endl;
+            
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
+        case 2:{//list all course info
+            ofstream cInfo ("Courses.html",ios::out | ios::trunc);
+            if (cInfo.is_open())
+            {
+                cInfo<<"<html><head><head><title>All Course List</title></head><body bgColor=#ffffcc><h1><font color=#6600ff>HKUST Course Registration System</font></h1><h2>All Course List</h2><p><table cellSpacing=1 cellPadding=1 border=1>";
+                cInfo<<"<tr><td>Course Code</td><td>Course Name</td><td>Credit</td></tr>";
+                vector<Course> cList=courseTable.traverseAllInHashTable();
+                for(int i=0;i<cList.size();i++){
+                    if(cList.at(i).getCourseCode()!=""){
+                        cInfo<<"<tr><td>"<<cList.at(i).getCourseCode()<<"</td><td>"<<cList.at(i).getCourseName()<<"</td><td>"<<cList.at(i).getCredit()<<"</td></tr>";
+                    }
+                }
+                
+                cInfo<<"</table></p></body></html>";
+                cInfo.close();
+                cout<<"Output Successful"<<endl;
+            }
+            else cout << "Unable to open file"<<endl;
+            
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
+        case 3:{//list all courses of a student
+            string StuID;
+            cout<<"Enter the student ID: ";
+            getline(cin,StuID);
+            Student stu;
+            stu.setStudentID(StuID);
+            int indexstu=studentTable.hashedIndex(stu);
+            if(!studentTable.getTable().at(indexstu).checkInList(stu)){
+                stu.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            vector<CourseRecord> crList=pstudentTable.getTable().at(indexstu).traverseAllCourseOfStudent(stu);
+            
+            ofstream scInfo (stu.getStudentID()+".html",ios::out | ios::trunc);
+            if (scInfo.is_open())
+            {
+                scInfo<<"<html><head><head><title>Course Records for Student "<<studentTable.getItem(stu).getStudentID()<<"</title></head><body bgColor=#ffffcc><h1><font color=#6600ff>HKUST Course Registration System</font></h1><h2>Course Records for Student: "<<studentTable.getItem(stu).getStudentName()<<" ("<<studentTable.getItem(stu).getStudentID()<<")</h2><p><table cellSpacing=1 cellPadding=1 border=1>";
+                if(crList.size()==0)
+                    scInfo<<"No course taken";
+                else{
+                    scInfo<<"<tr><td>Course Code</td><td>Course Name</td><td>Credit</td><td>Exam Mark</td></tr>";
+                
+                    for(int i=0;i<crList.size();i++){
+                        if(crList.at(i).getCourseCode()!=""){
+                            Course c;
+                            string CCode=crList.at(i).getCourseCode();
+                            c.setCourseCode(CCode);
+                            //re check existence
+                            int indexc=courseTable.hashedIndex(c);
+                            if(!courseTable.getTable().at(indexc).checkInList(c)){
+                                continue;
+                            }
+                            scInfo<<"<tr><td>"<<crList.at(i).getCourseCode()<<"</td><td>"<<courseTable.getItem(c).getCourseName()<<"</td><td>"<<courseTable.getItem(c).getCredit()<<"</td><td>";
+                            if(crList.at(i).getExamMark()==-1)
+                                scInfo<<"N/A";
+                            else
+                                scInfo<<crList.at(i).getExamMark();
+                            scInfo<<"</td></tr>";
+                        }
+                    }
+                }
+                scInfo<<"</table></p></body></html>";
+                scInfo.close();
+                cout<<"Output Successful"<<endl;
+            }
+            else cout << "Unable to open file"<<endl;
+            
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
+        case 4:{//list all students of a course
+            string CCode;
+            cout<<"Enter the Course Code: ";
+            getline(cin,CCode);
+            Course c;
+            c.setCourseCode(CCode);
+            int indexc=courseTable.hashedIndex(c);
+            if(!courseTable.getTable().at(indexc).checkInList(c)){
+                c.print_not_exist();
+                return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+                break;
+            }
+            vector<CourseRecord> crList=pcourseTable.getTable().at(indexc).traverseAllStudentOfCourse(c);
+            
+            ofstream scInfo (c.getCourseCode()+".html",ios::out | ios::trunc);
+            if (scInfo.is_open())
+            {
+                scInfo<<"<html><head><head><title>Student Records for Course "<<courseTable.getItem(c).getCourseCode()<<"</title></head><body bgColor=#ffffcc><h1><font color=#6600ff>HKUST Course Registration System</font></h1><h2>Student Records for Course: "<<courseTable.getItem(c).getCourseName()<<" ("<<courseTable.getItem(c).getCourseCode()<<")</h2><p><table cellSpacing=1 cellPadding=1 border=1>";
+                cout<<"size:"<<crList.size()<<endl;
+                if(crList.size()==0)
+                    scInfo<<"No student registered";
+                else{
+                    scInfo<<"<tr><td>Student ID</td><td>Student Name</td><td>Year</td><td>Gender</td><td>Exam Mark</td></tr>";
+                    
+                    for(int i=0;i<crList.size();i++){
+                        if(crList.at(i).getStudentID()!=""){
+                            Student stu;
+                            string StuID=crList.at(i).getStudentID();
+                            stu.setStudentID(StuID);
+                            //re check existence
+                            int indexstu=studentTable.hashedIndex(stu);
+                            if(!studentTable.getTable().at(indexstu).checkInList(stu)){
+                                continue;
+                            }
+                            scInfo<<"<tr><td>"<<crList.at(i).getStudentID()<<"</td><td>"<<studentTable.getItem(stu).getStudentName()<<"</td><td>"<<studentTable.getItem(stu).getYear()<<"</td><td>"<<studentTable.getItem(stu).getGender()<<"</td><td>";
+                            if(crList.at(i).getExamMark()==-1)
+                                scInfo<<"N/A";
+                            else
+                                scInfo<<crList.at(i).getExamMark();
+                            scInfo<<"</td></tr>";
+                        }
+                    }
+                }
+                scInfo<<"</table></p></body></html>";
+                scInfo.close();
+                cout<<"Output Successful"<<endl;
+            }
+            else cout << "Unable to open file"<<endl;
+            
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
+        case 5:{
+            return_main_menu(studentTable,courseTable,courseSelection,pstudentTable,pcourseTable);
+            break;
+        }
+        default:
+            break;
 
+    }
+}
 
 
 

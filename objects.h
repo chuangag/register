@@ -18,11 +18,11 @@ const int LENOFSTUID=8;
  void print_Query(datatype)
  ok^
  
- remember delete function should both delete the type table and the course selection linked list
+ remember delete function should both delete the type table and the course selection linked list ok
  
- remember the existence is checked when getting from sorted list so not mind it
+ remember the existence is checked when getting from sorted list so not mind it ok
  
- *****set functions should include checking valid input
+ *****set functions should include checking valid input ok
  */
 
 /*check if a string is int number*/
@@ -54,12 +54,19 @@ public:
     string getStudentName() const{return StudentName;}
     int getYear() const{return Year;}
     char getGender()const{return Gender;}
+    string getFullGender()const{
+        if(Gender=='M'){
+            return "Male";
+        }
+        else
+            return "Female";
+    }
     string getHashKey()const{return HashKey;}
     //set functions(include checking)
     void setcanPrintToFalse(){
         canPrint=false;
     }
-    void setStudentID(string StuID){
+    void setStudentID(string &StuID){
         while(StuID.length()!=8||!is_number(StuID)){
             cout<<"Invalid input, re-enter again [student ID]: ";
             getline(cin,StuID);
@@ -68,7 +75,7 @@ public:
         HashKey=StudentID;
     }
     
-    void setStudentName(string StuName){
+    void setStudentName(string &StuName){
         while(StuName.length()>32||StuName.length()<1){
             cout<<"Invalid input, re-enter again [student name]: ";
             getline(cin,StuName);
@@ -76,7 +83,7 @@ public:
         StudentName=StuName;
     }
     
-    void setYear(string y){
+    void setYear(string &y){
         while(!is_number(y)||(stoi(y)>3||stoi(y)<1)){
             cout<<"Invalid input, re-enter again [student year]: ";
             getline(cin,y);
@@ -84,11 +91,15 @@ public:
         Year=stoi(y);
     }
     
-    void setGender(string g){
-        while(g!="M"&&g!="F"){
+    void setGender(string &g){
+        while(g!="M"&&g!="m"&&g!="F"&&g!="f"){
             cout<<"Invalid input, re-enter again [M,F]: ";
             getline(cin,g);
         }
+        if(g=="f")
+            Gender='F';
+        if(g=="m")
+            Gender='M';
         Gender=g[0];
     }
     //overload operators
@@ -105,6 +116,8 @@ public:
             if(this->getStudentID()[i]<stu.getStudentID()[i]){
                 return true;
             }
+            else if(this->getStudentID()[i]>stu.getStudentID()[i])
+                return false;
         }
         return false;
     }
@@ -178,12 +191,12 @@ public:
     void setcanPrintToFalse(){
         canPrint=false;
     }
-    void setCourseCode(string CCode){
+    void setCourseCode(string &CCode){
         while((CCode.length()!=8&&CCode.length()!=7)||(!isupper(CCode[0])||!isupper(CCode[1])||!isupper(CCode[2])||!isupper(CCode[3]))){
-            if(CCode.length()==8&&isupper(CCode[0])&&isupper(CCode[1])&&isupper(CCode[2])&&isupper(CCode[3])&&is_number(CCode.substr(4,7))){
+            if(CCode.length()==8&&isupper(CCode[0])&&isupper(CCode[1])&&isupper(CCode[2])&&isupper(CCode[3])/*last 4 or 3 char dont matter*/){
                 break;
             }
-            if(CCode.length()==7&&isupper(CCode[0])&&isupper(CCode[1])&&isupper(CCode[2])&&isupper(CCode[3])&&is_number(CCode.substr(4,6))){
+            if(CCode.length()==7&&isupper(CCode[0])&&isupper(CCode[1])&&isupper(CCode[2])&&isupper(CCode[3])/*last 4 or 3 char dont matter*/){
                 break;
             }
 
@@ -193,14 +206,14 @@ public:
         CourseCode=CCode;
         HashKey=CourseCode;
     }
-    void setCourseName(string CName){
+    void setCourseName(string &CName){
         while(CName.length()>50||CName.length()<1){
             cout<<"Invalid input, re-enter again [course name]: ";
             getline(cin,CName);
         }
         CourseName=CName;
     }
-    void setCredit(string credit){
+    void setCredit(string &credit){
         while(credit!="0"&&credit!="1"&&credit!="2"&&credit!="3"&&credit!="4"&&credit!="5"){
             cout<<"Invalid input, re-enter again [course credit]: ";
             getline(cin,credit);
@@ -208,7 +221,7 @@ public:
         Credit=stoi(credit);
     }
     //overload operators
-    bool operator==(const Course& cour) const{//compare by studentID
+    bool operator==(const Course& cour) const{//compare by CourseCode
         if(this->getCourseCode()==cour.getCourseCode()){
             return true;
         }
@@ -216,11 +229,13 @@ public:
             return false;
         }
     }
-    bool operator<(const Course& cour) const{//compare by studentID
-        for(int i=0;i<LENOFSTUID;i++){
+    bool operator<(const Course& cour) const{//compare by CourseCode
+        for(int i=0;i<8;i++){
             if(this->getCourseCode()[i]<cour.getCourseCode()[i]){
                 return true;
             }
+            else if(this->getCourseCode()[i]>cour.getCourseCode()[i])
+                return false;
         }
         return false;
     }
