@@ -21,10 +21,12 @@ public:
     T& queryItem(T item);
     void queryAndPrintItem(T item);
     void insertItem(T item);
+    void insertItemNotPrint(T item);
     void delete_all_include(T item);
     void delete_all_courses(Course cour);
     void delete_all_students(Student stu);
     void setExamMarkFor(T item,string mark);
+    void clearList();
     vector<T> traverseAll();
     /*TODO:
      void traverseAll()
@@ -34,6 +36,10 @@ private:
     list<T> doublySortedLinkedList;
     
 };
+template <class T>
+void DoublySortedLinkedList<T>::clearList(){
+  doublySortedLinkedList.clear();
+}
 
 template <class T>
 void DoublySortedLinkedList<T>::sortList(){
@@ -133,6 +139,19 @@ void DoublySortedLinkedList<T>::insertItem(T item){
     }
 }
 
+template <class T>
+void DoublySortedLinkedList<T>::insertItemNotPrint(T item){
+    /*check if item already exist using checkInList
+     push_back the item
+     sort the list using sortList()*/
+    if(checkInList(item)){
+        //item.print_exist();
+    }
+    else{
+        doublySortedLinkedList.push_back(item);
+        sortList();
+    }
+}
 /*these functions are only for CourseRecord since only that datatype has ability to check inculde(by StuID or CCode)*/
 //NO USE
 /*
@@ -154,12 +173,12 @@ void DoublySortedLinkedList<T>::delete_all_courses(Course cour){
      delete *i
      */
     typename list<T>::iterator i;
-    for(i=doublySortedLinkedList.begin();i!=doublySortedLinkedList.end();++i){
+    for(i=doublySortedLinkedList.begin();i!=doublySortedLinkedList.end();){
         if(i->include(cour)){
             //no need to print success delete from the courseSelection table according to the sample
-            i->setcanPrintToFalse();
-            eraseItem(*i);
+            i=doublySortedLinkedList.erase(i);
         }
+        else{++i;}
     }
 }
 
@@ -170,12 +189,12 @@ void DoublySortedLinkedList<T>::delete_all_students(Student stu){
      delete *i
      */
     typename list<T>::iterator i;
-    for(i=doublySortedLinkedList.begin();i!=doublySortedLinkedList.end();++i){
+    for(i=doublySortedLinkedList.begin();i!=doublySortedLinkedList.end();){
         if(i->include(stu)){
             //no need to print success delete from the courseSelection table according to the sample
-            i->setcanPrintToFalse();
-            eraseItem(*i);
+            i=doublySortedLinkedList.erase(i);
         }
+        else{++i;}
     }
 }
 
@@ -206,6 +225,26 @@ class DoublySortedLinkedList<T*>{
 public:
     DoublySortedLinkedList(){}
     ~DoublySortedLinkedList(){}
+    
+    int size(){return pdoublySortedLinkedList.size();}
+    
+    void insertItemNotPrint(T* item){
+      /*check if item already exist using checkInList
+     push_back the item
+     sort the list using sortList()*/
+      if(checkInList(item)){
+            //item.print_exist();
+        }
+        else{
+            pdoublySortedLinkedList.push_back(item);
+            sortList();
+            //item.print_insert_success();
+        }
+    }
+    
+    void clearList(){
+      pdoublySortedLinkedList.clear();
+    }
     //sort the list
     void sortList(){
         /*sort the list using default sort function
@@ -280,32 +319,40 @@ public:
         }
     }
 
-    void delete_all_courses(Course cour){
+    void delete_all_courses(Course &cour){
         /*traverse the list and
          if(*i.include(item))
          delete *i
          */
         typename list<T*>::iterator i;
-        for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
-            if((**i).include(cour)){
+        for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();){
+            if((*i)->include(cour)){
                 //no need to print success delete from the courseSelection table according to the sample
-                pdoublySortedLinkedList.erase(i);
+                i=pdoublySortedLinkedList.erase(i);
             }
+            else{
+	      ++i;
+	    }
+            
         }
     }
 
-    void delete_all_students(Student stu){
+    void delete_all_students(Student &stu){
         /*traverse the list and
          if(*i.include(item))
          delete *i
          */
         typename list<T*>::iterator i;
-        for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
-            if((**i).include(stu)){
+        for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();){
+            if((*i)->include(stu)){
                 //no need to print success delete from the courseSelection table according to the sample
-                pdoublySortedLinkedList.erase(i);//TODO:debuging
-            }
-        }
+                //pdoublySortedLinkedList.remove(*i);//TODO:debuging
+		i=pdoublySortedLinkedList.erase(i);
+	    }
+	    else{
+	      ++i;
+	    }
+	}
     }
     vector<T> traverseAll(){
         vector<T> result;

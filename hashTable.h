@@ -38,6 +38,11 @@ public:
     //get table
     vector<DoublySortedLinkedList<T> > getTable(){return table;}
     
+    void clearTable(){
+      for(int i=0;i<numBuckets;i++){
+	table.at(i).clearList();
+      }
+    }
     //return the index after hashing
     int hashedIndex(T Item){//HashKey is a string, and initialize when Item constructed
         string key;
@@ -130,6 +135,21 @@ public:
         }
         else{
             table.at(index).insertItem(Item);
+        }
+    }
+    
+    void addItemNotPrint(T Item){
+        /*get hashed index = index
+         checkInList in table.at(index), which is a DoublySortedLinkedList
+         if exist, Item.print_exist
+         if not exist yet, table.at(index).insertItem(Item)
+         */
+        int index=hashedIndex(Item);
+        if(table.at(index).checkInList(Item)){
+           // Item.print_exist();
+        }
+        else{
+            table.at(index).insertItemNotPrint(Item);
         }
     }
     
@@ -238,6 +258,11 @@ public:
     ~HashTable(){}
     vector<DoublySortedLinkedList<T*> > getTable(){return table;}
 
+    void clearTable(){
+      for(int i=0;i<numBuckets;i++){
+	table.at(i).clearList();
+      }
+    }
     //return the index after hashing by Student ID
     int hashedIndexByStuID(T* Item){//HashKey is a string, and initialize when Item constructed
         string key;
@@ -320,20 +345,30 @@ public:
         table.at(index).queryItem(Item)->print_Query();
     }
     
-    void remove_all_Pointer_by_student(Student stu){
+    void remove_all_Pointer_by_student(Student &stu){
+        /*
         T temp;
         temp.setStudentID(stu.getStudentID());
         T* ptmp=&temp;
         int index=hashedIndexByStuID(ptmp);
         table.at(index).delete_all_students(stu);
-
+*/
+	for(int i=0;i<numBuckets;i++){
+	  if(table.at(i).size()>0)
+	    table.at(i).delete_all_students(stu);
+	  
+	}
     }
-    void remove_all_Pointer_by_course(Course cour){
-        T temp;
+    void remove_all_Pointer_by_course(Course &cour){
+       /* T temp;
         temp.setCourseCode(cour.getCourseCode());
         T* ptmp=&temp;
         int index=hashedIndexByCCode(ptmp);
-        table.at(index).delete_all_courses(cour);
+        table.at(index).delete_all_courses(cour);*/
+       for(int i=0;i<numBuckets;i++){
+	  table.at(i).delete_all_courses(cour);
+	  
+	}
     }
     
     /*     output all function for html and file IO

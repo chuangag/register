@@ -86,6 +86,16 @@ public:
         //cout<<"input: "<<mark<<endl;
         //cout<<"modified to: "<<ExamMark<<endl;
     }
+    void setExamMarkNotPrint(string mark){
+        while(!is_number(mark)||(stoi(mark)>100||stoi(mark)<0)){
+            cout<<"Invalid input, re-enter again [exam mark]: ";
+            cin>>mark;
+        }
+       // print_modify_success();
+        ExamMark=stoi(mark);
+        //cout<<"input: "<<mark<<endl;
+        //cout<<"modified to: "<<ExamMark<<endl;
+    }
     //check include course or student
     bool include(Student stu){
         if(this->getStudentID()==stu.getStudentID()){

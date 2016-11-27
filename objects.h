@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <cctype>
+#include <algorithm>
 
 using namespace std;
 const int LENOFSTUID=8;
