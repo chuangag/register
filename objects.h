@@ -43,10 +43,12 @@ bool is_number(const string& s)
 class Student
 {
 public:
+    static Student notPrint;
     Student(string StuID=""){
         StudentID=StuID;
         canPrint=true;
         Year=0;
+        notPrint.setcanPrintToFalse();
     }
     ~Student(){}
     //get functions
@@ -62,6 +64,7 @@ public:
             return "Female";
     }
     string getHashKey()const{return HashKey;}
+    bool getCanPrint(){return canPrint;}
     //set functions(include checking)
     void setcanPrintToFalse(){
         canPrint=false;
@@ -167,7 +170,7 @@ private:
     bool canPrint;
 };
 
-
+ Student Student::notPrint;
 
 
 
@@ -176,10 +179,12 @@ private:
 class Course
 {
 public:
+    static Course notPrint;
     Course(string CCode=""){
         CourseCode=CCode;
         canPrint=true;
         Credit=-1;
+        notPrint.setcanPrintToFalse();
     }
     ~Course(){}
     //get functions
@@ -187,6 +192,7 @@ public:
     string getCourseName() const{return CourseName;}
     int getCredit() const{return Credit;}
     string getHashKey() const{return HashKey;}
+    bool getCanPrint(){return canPrint;}
     //set functions
     void setcanPrintToFalse(){
         canPrint=false;
@@ -276,7 +282,7 @@ private:
     bool canPrint;
 };
 
-
+Course Course::notPrint;
 
 
 

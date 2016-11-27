@@ -63,9 +63,10 @@ int main(int argc, const char * argv[]) {
 void deleteCourse(Course &c,HashTable<Course> &courseTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     if(!courseSelection.checkCourseExist(c)){//check if any register record exist, if exist, deletion failed
         courseTable.removeItem(c);
-        courseSelection.delete_all_courses(c);
+        
         pcourseTable.remove_all_Pointer_by_course(c);
         pstudentTable.remove_all_Pointer_by_course(c);
+        courseSelection.delete_all_courses(c);
     }
     else{
         cout<<"Some students already registered in this course, deletion fail"<<endl;
@@ -74,9 +75,10 @@ void deleteCourse(Course &c,HashTable<Course> &courseTable,DoublySortedLinkedLis
 
 void deleteStudent(Student &s,HashTable<Student> &studentTable,DoublySortedLinkedList<CourseRecord> &courseSelection,HashTable<CourseRecord*> &pstudentTable,HashTable<CourseRecord*> &pcourseTable){
     studentTable.removeItem(s);
-    courseSelection.delete_all_students(s);
+    
     pcourseTable.remove_all_Pointer_by_student(s);
     pstudentTable.remove_all_Pointer_by_student(s);
+    courseSelection.delete_all_students(s);
     
 }
 

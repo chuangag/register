@@ -5,17 +5,20 @@
 class CourseRecord
 {
 public:
+    static CourseRecord notPrint;
     CourseRecord(string StuID="",string CCode=""){
         StudentID=StuID;
         CourseCode=StuID;
         canPrint=true;
         ExamMark=-1;//N/A
+        notPrint.setcanPrintToFalse();
     }
     ~CourseRecord(){}
     //get functions
     string getStudentID() const{return StudentID;}
     string getCourseCode() const{return CourseCode;}
     int getExamMark() const{return ExamMark;}
+    bool getCanPrint(){return canPrint;}
     //set functions
     void setcanPrintToFalse(){
         canPrint=false;
@@ -170,5 +173,6 @@ private:
     int ExamMark;//0<=mark<=100 or unassigned
     bool canPrint;
 };
+CourseRecord CourseRecord::notPrint;
 
 #endif

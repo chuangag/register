@@ -100,9 +100,7 @@ T& DoublySortedLinkedList<T>::queryItem(T item){//CourseSelection need to be mod
         }
     }
     item.print_not_exist();
-    T notPrint;
-    notPrint.setcanPrintToFalse();
-    return notPrint;//tentative bug: return local variable as reference
+    return T::notPrint;//tentative bug: return local variable as reference
 }
 
 template <class T>
@@ -289,9 +287,9 @@ public:
          */
         typename list<T*>::iterator i;
         for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
-            if((*i)->include(cour)){
+            if((**i).include(cour)){
                 //no need to print success delete from the courseSelection table according to the sample
-                erasepItem(*i);
+                pdoublySortedLinkedList.erase(i);
             }
         }
     }
@@ -303,9 +301,9 @@ public:
          */
         typename list<T*>::iterator i;
         for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
-            if((*i)->include(stu)){
+            if((**i).include(stu)){
                 //no need to print success delete from the courseSelection table according to the sample
-                erasepItem(*i);//TODO:debuging
+                pdoublySortedLinkedList.erase(i);//TODO:debuging
             }
         }
     }
@@ -326,7 +324,7 @@ public:
         typename list<T*>::iterator i;
         for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
             T temp=**i;
-            if(temp.getStudentID()==stu.getStudentID()){
+            if(temp.getStudentID()==stu.getStudentID()&&temp.getCanPrint()){
                 result.push_back(temp);
             }
         }
@@ -340,7 +338,7 @@ public:
         typename list<T*>::iterator i;
         for(i=pdoublySortedLinkedList.begin();i!=pdoublySortedLinkedList.end();++i){
             T temp=**i;
-            if(temp.getCourseCode()==c.getCourseCode()){
+            if(temp.getCourseCode()==c.getCourseCode()&&temp.getCanPrint()){
                 result.push_back(temp);
             }
         }

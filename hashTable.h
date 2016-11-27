@@ -301,14 +301,14 @@ public:
         }
     }
     
-    void removeItemByStuID(T* Item){
+    void removepItemByStuID(T* Item){
         int index=hashedIndexByStuID(Item);
-        table.at(index).eraseItem(Item);
+        table.at(index).erasepItem(Item);
         
     }
-    void removeItemByCCode(T* Item){
+    void removepItemByCCode(T* Item){
         int index=hashedIndexByCCode(Item);
-        table.at(index).eraseItem(Item);
+        table.at(index).erasepItem(Item);
         
     }
     void queryItemByStuID(T* Item){
